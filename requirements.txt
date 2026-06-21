@@ -1,0 +1,20 @@
+# Retail Banking Data Platform — Dependencies
+
+# API ingestion
+requests==2.31.0
+pandas==2.1.4
+
+# Delta Lake (local testing without Databricks)
+deltalake==0.14.0
+
+# Data quality
+pytest==7.4.4
+great-expectations==0.18.8
+
+# dbt
+dbt-core==1.7.4
+dbt-databricks==1.7.4
+
+# Utilities
+python-dotenv==1.0.0
+loguru==0.7.2
