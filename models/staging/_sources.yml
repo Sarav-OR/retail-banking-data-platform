@@ -1,0 +1,44 @@
+version: 2
+
+sources:
+  - name: silver
+    schema: silver
+    description: "Cleaned, conformed Silver-layer tables, one per raw source"
+    tables:
+      - name: transactions_cleaned
+        description: "Deduplicated, DQ-flagged transaction records from the Kaggle fraud dataset"
+        columns:
+          - name: transaction_sk
+            description: "Surrogate key, hash of transaction feature columns"
+            tests:
+              - unique
+              - not_null
+          - name: is_fraud
+            description: "1 if transaction is labeled fraudulent, 0 otherwise"
+          - name: dq_passed
+            description: "True if the row passed all Silver-layer data quality checks"
+
+      - name: customers_scd2
+        description: "SCD Type 2 customer dimension with full change history"
+        columns:
+          - name: customer_id
+            description: "Natural key — not unique alone, use with is_current for current state"
+            tests:
+              - not_null
+          - name: is_current
+            description: "True if this is the customer's current attribute state"
+          - name: effective_from
+            description: "Date this version of the customer record became active"
+          - name: effective_to
+            description: "Date this version stopped being active (null/future if current)"
+
+      - name: market_economic_daily
+        description: "Standardized daily market and economic metrics from Alpha Vantage and FRED"
+        columns:
+          - name: metric_sk
+            description: "Surrogate key, hash of date + metric_name"
+            tests:
+              - unique
+              - not_null
+          - name: metric_name
+            description: "One of: eur_usd_close, jpy_usd_close, ibm_close, fed_funds_rate, cpi_inflation, gdp_growth, unemployment_rate"
